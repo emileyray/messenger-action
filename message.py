@@ -1,6 +1,7 @@
 import os
 import sys
 
+# import dotenv
 import httpx
 
 
@@ -16,7 +17,12 @@ class Config:
         self.enable_telegram = enable_telegram
         self.enable_rocket_chat = enable_rocket_chat
 
+    # print
+    def __str__(self):
+        return f'Config(telegram_token={self.telegram_token}, telegram_chat_id={self.telegram_chat_id}, rocket_chat_url={self.rocket_chat_url}, rocket_chat_token={self.rocket_chat_token}, rocket_chat_user_id={self.rocket_chat_user_id}, rocket_chat_channel={self.rocket_chat_channel}, message_text={self.message_text}, enable_telegram={self.enable_telegram}, enable_rocket_chat={self.enable_rocket_chat})'
+
 def get_vars() -> Config:
+    # dotenv.load_dotenv()
     return Config(
         telegram_token = os.environ['TELEGRAM-TOKEN'],
         telegram_chat_id = os.environ['TELEGRAM-CHAT-ID'],
@@ -30,7 +36,8 @@ def get_vars() -> Config:
     )
 
 def send_telegram_message(config: Config):
-    assert config.enable_telegram == True and config.telegram_token != None and config.telegram_chat_id != None and config.message_text != None
+    print(config)
+    assert config.enable_telegram == 'true' and config.telegram_token and config.telegram_chat_id and config.message_text
     url = f'https://api.telegram.org/bot{config.telegram_token}/sendMessage'
     data = {
         'chat_id': config.telegram_chat_id,
@@ -44,7 +51,7 @@ def send_telegram_message(config: Config):
         sys.exit(1)
 
 def send_rocket_chat_message(config: Config):
-    assert config.enable_rocket_chat == True and config.rocket_chat_url != None and config.rocket_chat_token != None and config.rocket_chat_user_id != None and config.rocket_chat_channel != None and config.message_text != None
+    assert config.enable_rocket_chat == 'true' and config.rocket_chat_url and config.rocket_chat_token and config.rocket_chat_user_id and config.rocket_chat_channel and config.message_text != None
     url = f'{config.rocket_chat_url}/api/v1/chat.postMessage'
     headers = {
         'X-Auth-Token': config.rocket_chat_token,
