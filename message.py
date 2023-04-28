@@ -23,17 +23,17 @@ class Config:
 
 def get_vars() -> Config:
     # dotenv.load_dotenv()
-    print(os.environ)
+    # print(os.environ)
     return Config(
-        telegram_token = os.environ['TELEGRAM-TOKEN'],
-        telegram_chat_id = os.environ['TELEGRAM-CHAT-ID'],
-        rocket_chat_url = os.environ['ROCKET-CHAT-URL'],
-        rocket_chat_token = os.environ['ROCKET-CHAT-TOKEN'],
-        rocket_chat_user_id = os.environ['ROCKET-CHAT-USERID'],
-        rocket_chat_channel = os.environ['ROCKET-CHAT-TARGET-CHAT'],
-        message_text = os.environ['MESSAGE-TEXT'],
-        enable_rocket_chat = os.environ['ROCKET-CHAT'],
-        enable_telegram = os.environ['TELEGRAM'],
+        telegram_token = os.environ['INPUT_TELEGRAM-TOKEN'],
+        telegram_chat_id = os.environ['INPUT_TELEGRAM-CHAT-ID'],
+        rocket_chat_url = os.environ['INPUT_ROCKET-CHAT-URL'],
+        rocket_chat_token = os.environ['INPUT_ROCKET-CHAT-TOKEN'],
+        rocket_chat_user_id = os.environ['INPUT_ROCKET-CHAT-USERID'],
+        rocket_chat_channel = os.environ['INPUT_ROCKET-CHAT-TARGET-CHAT'],
+        message_text = os.environ['INPUT_MESSAGE-TEXT'],
+        enable_rocket_chat = os.environ['INPUT_ROCKET-CHAT'],
+        enable_telegram = os.environ['INPUT_TELEGRAM'],
     )
 
 def send_telegram_message(config: Config):
