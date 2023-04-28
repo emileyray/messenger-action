@@ -7,11 +7,6 @@ inputs:
   telegram-chat-id:
     description: ID of the target chat (get using @getidsbot) 
     required: false
-#  gitea-token:
-#    description: Gitea token
-#    required: true
-#  gitea-repo:
-#    description: The target repo to get commits from in format https://<gitea-instance-URL>/<Owner>/<Repo-Name>
   rocket-chat-url:
     description: Rocket Chat URL
     required: false
@@ -43,10 +38,10 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Install Python
-      uses: actions/setup-python@v4
+    # - name: Install Python
+    #   uses: actions/setup-python@v4
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: pip3 install -r requirements.txt
       shell: bash
     - name: Pass inputs to shell
       run: |
@@ -54,5 +49,5 @@ runs:
       shell: bash
     - name: run-script
       id: script
-      run: python message.py
+      run: python3 message.py
       shell: bash
