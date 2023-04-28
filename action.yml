@@ -33,7 +33,7 @@ inputs:
 outputs:
   success:
     description: Script result
-    value: ${{ steps.run-script.outputs.result }}
+    value: ${{ steps.script.outputs.result }}
 
 runs:
   using: composite
