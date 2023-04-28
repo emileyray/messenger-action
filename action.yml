@@ -1,59 +1,60 @@
-name: get-commit-changelog
-description: List commits between two commits as output
-branding:
-  icon: git-commit
-  color: yellow
+name: send-message 
+description: Send an alert to Telegram or Rocket Chat 
 inputs:
-  base:
-    description: Base commit (from)
+  telegram-token:
+    description: Telegram Bot Token (from @BotFather)
+    required: false
+  telegram-chat-id:
+    description: ID of the target chat (get using @getidsbot) 
+    required: false
+#  gitea-token:
+#    description: Gitea token
+#    required: true
+#  gitea-repo:
+#    description: The target repo to get commits from in format https://<gitea-instance-URL>/<Owner>/<Repo-Name>
+  rocket-chat-url:
+    description: Rocket Chat URL
+    required: false
+  rocket-chat-token:
+    description: Rocket Chat Token
+    required: false
+  rocket-chat-userID:
+    description: Rocket Chat User ID
+    required: false
+  rocket-chat-target-chat:
+    description: Rocket Chat Target Chat
+    required: false
+  telegram:
+    description: Send message to Telegram
+    default: 'false'
+    required: false
+  rocket-chat:
+    description: Send message to Rocket Chat
+    default: 'false'
+    required: false
+  message-text:
+    description: Message text
     required: true
-  head:
-    description: Head commit (to). Defaults to ref
-    default: ${{ github.ref }}
-    required: false
-  token:
-    description: GitHub token
-    required: false
-    default: ${{ github.token }}
-  repository:
-    description: Repository to compare commits in. Defaults to current repository
-    required: false
-    default: ${{ github.repository }}
 outputs:
-  changelog:
-    description: Changelog
-    value: ${{ steps.changelog.outputs.result }}
+  success:
+    description: Script result
+    value: ${{ steps.run-script.outputs.result }}
 
 runs:
   using: composite
   steps:
-    - name: Get commits
-      uses: https://github.com/actions/github-script@v6
-      id: changelog
+    - name: Install Python
+      uses: actions/setup-python@v4
       with:
-        github-token: ${{ inputs.token }}
-        result-encoding: string
-        script: |
-          try {
-            const returnAfterDash = (str) => str.split('-').pop();
-
-            const head = returnAfterDash('${{ inputs.head }}');
-            const base = returnAfterDash('${{ inputs.base }}');
-
-            const fullRepoName = '${{ inputs.repository }}';
-            const [owner, repo] = fullRepoName.split('/');
-
-            const compare = await github.rest.repos.compareCommits({
-              owner,
-              repo,
-              base,
-              head,
-            });
-
-            const parseCommit = (message) => message.split('\n')[0].replace('#', `${fullRepoName}#`);
-            const changelog = compare.data.commits.map(commit => `* ${parseCommit(commit.commit.message)} ([commit](${commit.html_url}))`).join('\n');
-
-            return changelog;
-          } catch (error) {
-            return error;
-          }
+        python-version: '3.11'
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+      shell: bash
+    - name: Pass inputs to shell
+      run: |
+              echo "INPUT_NUM=${{ inputs.num }}" >> $GITHUB_ENV
+      shell: bash
+    - name: run-script
+      id: script
+      run: python message.py
+      shell: bash

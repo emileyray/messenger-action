@@ -1,5 +1,5 @@
 name: Test
-
+description: Test
 on:
   push:
     branches:
@@ -11,19 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./
-        id: changelog
         with:
-          base: 8bc34fa72b52f1fa83d753f0e7bbaf9dfeec9dba 
-      - name: Print changelog
-        run: echo "${{ steps.changelog.outputs.changelog }}"
-  test-action-with-empty-inputs:
-    runs-on: macOS
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./
-        id: changelog
-        with:
-          base: ''
-          head: ''
-      - name: Print changelog
-        run: echo "${{ steps.changelog.outputs.changelog }}"
+          telegram-token: ${{ secrets.TELEGRAM_TOKEN }}
+          telegram-chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          rocket-chat-url: ${{ secrets.ROCKET_CHAT_URL }}
+          rocket-chat-token: ${{ secrets.ROCKET_CHAT_TOKEN }}
+          rocket-chat-userID: ${{ secrets.ROCKET_CHAT_USERID }}
+          rocket-chat-target-chat: ${{ secrets.ROCKET_CHAT_TARGET_CHAT }}
+          telegram: 'true'
+          rocket-chat: 'true'
+          message-text: 'Test message'
+
