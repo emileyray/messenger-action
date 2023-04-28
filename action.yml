@@ -55,5 +55,5 @@ runs:
 
             return changelog;
           } catch (error) {
-            return `$error`;
+            return error;
           }
