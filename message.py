@@ -23,6 +23,7 @@ class Config:
 
 def get_vars() -> Config:
     # dotenv.load_dotenv()
+    print(os.environ)
     return Config(
         telegram_token = os.environ['TELEGRAM-TOKEN'],
         telegram_chat_id = os.environ['TELEGRAM-CHAT-ID'],
