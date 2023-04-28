@@ -43,10 +43,9 @@ runs:
     - name: Install dependencies
       run: pip3 install -r requirements.txt
       shell: bash
-    # - name: Pass inputs to shell
-    #   run: |
-    #           echo "INPUT_NUM=${{ inputs.num }}" >> $GITHUB_ENV
-    #   shell: bash
+    - name: Pass inputs to shell
+      run: echo "INPUT_NUM=${{ inputs.num }}" >> $GITHUB_ENV
+      shell: bash
     - name: run-script
       id: script
       run: python3 message.py
