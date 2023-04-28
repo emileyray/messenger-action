@@ -1,0 +1,29 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-action:
+    runs-on: macOS
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        id: changelog
+        with:
+          base: 8bc34fa72b52f1fa83d753f0e7bbaf9dfeec9dba 
+      - name: Print changelog
+        run: echo "${{ steps.changelog.outputs.changelog }}"
+  test-action-with-empty-inputs:
+    runs-on: macOS
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        id: changelog
+        with:
+          base: ''
+          head: ''
+      - name: Print changelog
+        run: echo "${{ steps.changelog.outputs.changelog }}"
