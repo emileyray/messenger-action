@@ -1,0 +1,59 @@
+name: get-commit-changelog
+description: List commits between two commits as output
+branding:
+  icon: git-commit
+  color: yellow
+inputs:
+  base:
+    description: Base commit (from)
+    required: true
+  head:
+    description: Head commit (to). Defaults to ref
+    default: ${{ github.ref }}
+    required: false
+  token:
+    description: GitHub token
+    required: false
+    default: ${{ github.token }}
+  repository:
+    description: Repository to compare commits in. Defaults to current repository
+    required: false
+    default: ${{ github.repository }}
+outputs:
+  changelog:
+    description: Changelog
+    value: ${{ steps.changelog.outputs.result }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get commits
+      uses: https://github.com/actions/github-script@v6
+      id: changelog
+      with:
+        github-token: ${{ inputs.token }}
+        result-encoding: string
+        script: |
+          try {
+            const returnAfterDash = (str) => str.split('-').pop();
+
+            const head = returnAfterDash('${{ inputs.head }}');
+            const base = returnAfterDash('${{ inputs.base }}');
+
+            const fullRepoName = '${{ inputs.repository }}';
+            const [owner, repo] = fullRepoName.split('/');
+
+            const compare = await github.rest.repos.compareCommits({
+              owner,
+              repo,
+              base,
+              head,
+            });
+
+            const parseCommit = (message) => message.split('\n')[0].replace('#', `${fullRepoName}#`);
+            const changelog = compare.data.commits.map(commit => `* ${parseCommit(commit.commit.message)} ([commit](${commit.html_url}))`).join('\n');
+
+            return changelog;
+          } catch {
+            return 'No changes found or failed';
+          }
