@@ -14,7 +14,7 @@ jobs:
   job2:
     runs-on: macOS
     steps:
-      - run: exit 1 # job fails intentionally
+      - run: exit 0 # job does not fail intentionally
   job3:
     runs-on: macOS
     steps:
@@ -35,6 +35,7 @@ jobs:
             fi
   test-action:
     runs-on: macOS
+    if: always()
     steps:
       - uses: actions/checkout@v3
       - uses: ./
@@ -46,12 +47,12 @@ jobs:
           rocket-chat-userID: ${{ secrets.ROCKET_CHAT_USERID }}
           rocket-chat-target-chat: ${{ secrets.ROCKET_CHAT_TARGET_CHAT }}
           telegram: 'true'
-          rocket-chat: 'false'
+          rocket-chat: 'true'
           message-text: |
             Build: <b>Messenger Action</b>
             - Build Number: ${{ github.run_number }}
             - Workflow Run: <a href="${{ github.event.workflow_run.url }}">${{ github.workflow }}</a>
-            - ${{ needs.check.outputs.jobs_success == 'true' && 'All jobs succeeded' || 'One or more jobs failed' }}
+            - ${{ needs.check.outputs.jobs_success == 'true' && '✅ All jobs succeeded' || '❌ One or more jobs failed' }}
             - Changelog: ${{ steps.changelog.outputs.output }}
 
 
