@@ -14,7 +14,7 @@ jobs:
   job2:
     runs-on: macOS
     steps:
-      - run: exit 0 # job does not fail intentionally
+      - run: echo "Job 2 succeeded"
   job3:
     runs-on: macOS
     steps:
