@@ -25,6 +25,5 @@ jobs:
           message-text: |
             Build: *Messenger Action*
             - Build Number: ${{ github.run_number }}
-            - Workflow Run: (${{ github.event.workflow_run.url }})[{{ github.workflow }}]
-            - ${{ jobs.test-action }}
+            - Run name: ${{ github.workflow }}
             - Changelog: ${{ steps.changelog.outputs.output }}
