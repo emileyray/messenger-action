@@ -22,8 +22,7 @@ jobs:
           telegram: 'true'
           rocket-chat: 'false'
           message-text: |
-            ${{ format('{0}\n', format('{0} <b>Build: Messenger Action</b>', if (job.status == 'success') { '✅' } else { '🛑' })) }}
-
+            ${{ format('{0}\n', format('{0} <b>Build: Messenger Action</b>', format('{0} {1}', if eq(job.status, 'success') { '✅' } else { '🛑' }, ''))) }}
 
 
 
