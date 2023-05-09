@@ -24,6 +24,7 @@ jobs:
     needs: [job1, job2, job3]
     steps:
       - run: |
+          echo ${{ jobs.job1.outcome }}
           if [ "${{ jobs.job1.outcome }}" == "success" ] && \
              [ "${{ jobs.job2.outcome }}" == "success" ] && \
              [ "${{ jobs.job3.outcome }}" == "success" ]; then
