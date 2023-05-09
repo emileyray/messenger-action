@@ -7,6 +7,32 @@ on:
   pull_request:
 
 jobs:
+  job1:
+    runs-on: macOS
+    steps:
+      - run: echo "Job 1 succeeded"
+  job2:
+    runs-on: macOS
+    steps:
+      - run: exit 1 # job fails intentionally
+  job3:
+    runs-on: macOS
+    steps:
+      - run: echo "Job 3 succeeded"
+  check:
+    runs-on: macOS
+    needs: [job1, job2, job3]
+    steps:
+      - run: |
+          if [ "${{ jobs.job1.outcome }}" == "success" ] && \
+             [ "${{ jobs.job2.outcome }}" == "success" ] && \
+             [ "${{ jobs.job3.outcome }}" == "success" ]; then
+              echo "All jobs succeeded"
+              echo "::set-output name=jobs_success::true"
+            else
+              echo "One or more jobs failed"
+              echo "::set-output name=jobs_success::false"
+            fi
   test-action:
     runs-on: macOS
     steps:
@@ -25,7 +51,7 @@ jobs:
             Build: <b>Messenger Action</b>
             - Build Number: ${{ github.run_number }}
             - Workflow Run: <a href="${{ github.event.workflow_run.url }}">${{ github.workflow }}</a>
-            - Success: ${{ job.status }}
+            - ${{ needs.check.outputs.jobs_success == 'true' && 'All jobs succeeded' || 'One or more jobs failed' }}
             - Changelog: ${{ steps.changelog.outputs.output }}
 
 
