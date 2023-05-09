@@ -95,7 +95,7 @@ runs:
             data = {
                 'chat_id': config.telegram_chat_id,
                 'text': config.message_text,
-                # 'parse_mode': 'HTML'
+                'parse_mode': 'markdown'
             }
             response = httpx.post(url, json=data)
             if response.status_code != 200:

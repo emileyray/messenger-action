@@ -23,11 +23,8 @@ jobs:
           telegram: 'true'
           rocket-chat: 'true'
           message-text: |
-            Build: **Messenger Action**
+            Build: *Messenger Action*
             - Build Number: ${{ github.run_number }}
-            - Workflow Run: [${{ github.event.workflow_run.url }}]({{ github.workflow }})
-            - ${{ jobs }}
+            - Workflow Run: (${{ github.event.workflow_run.url }})[{{ github.workflow }}]
+            - ${{ jobs.test-action }}
             - Changelog: ${{ steps.changelog.outputs.output }}
-
-
-
