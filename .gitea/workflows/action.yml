@@ -7,24 +7,6 @@ on:
   pull_request:
 
 jobs:
-  job1:
-    runs-on: macOS
-    steps:
-      - run: echo "Job 1 succeeded"
-  job2:
-    runs-on: macOS
-    steps:
-      - run: echo "Job 2 succeeded"
-  job3:
-    runs-on: macOS
-    steps:
-      - run: echo "Job 3 succeeded"
-  check:
-    runs-on: macOS
-    needs: [job1, job2, job3]
-    steps:
-      - run: |
-          echo ${{ jobs.job1.outcome }}
   test-action:
     runs-on: macOS
     if: always()
@@ -41,10 +23,10 @@ jobs:
           telegram: 'true'
           rocket-chat: 'true'
           message-text: |
-            Build: <b>Messenger Action</b>
+            Build: **Messenger Action**
             - Build Number: ${{ github.run_number }}
-            - Workflow Run: <a href="${{ github.event.workflow_run.url }}">${{ github.workflow }}</a>
-            - ${{ needs.check.outputs.jobs_success == 'true' && '✅ All jobs succeeded' || '❌ One or more jobs failed' }}
+            - Workflow Run: [${{ github.event.workflow_run.url }}]({{ github.workflow }})
+            - ${{ jobs }}
             - Changelog: ${{ steps.changelog.outputs.output }}
 
 
