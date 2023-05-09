@@ -20,12 +20,12 @@ jobs:
           rocket-chat-userID: ${{ secrets.ROCKET_CHAT_USERID }}
           rocket-chat-target-chat: ${{ secrets.ROCKET_CHAT_TARGET_CHAT }}
           telegram: 'true'
-          rocket-chat: 'true'
+          rocket-chat: 'false'
           message-text: |
-            <b>Build ${job.status == 'success' ? 'Succeeded' : 'Failed'}: Messagner Action</b>
+            <b>Build: Messegner Action</b>
             - Build Number: ${{ github.run_number }}
             - Commit: <a href="${{ github.event.head_commit.url }}">{{{ github.event.head_commit.message }}}</a> by <b>${{ github.event.head_commit.author.name }}</b>
             - Pull Request: <a href="' + github.event.pull_request.html_url + '">' + github.event.pull_request.title + '</a>'
-            - Branch: github.ref.replace('refs/heads/', '')
-            - Workflow Run: <a href="${{ github.event.workflow_run.url }}">${{ github.workflow }} (${job.status}})</a>
+            - Branch: ${{github.ref.replace('refs/heads/', '')}}
+            - Workflow Run: <a href="${{ github.event.workflow_run.url }}">${{ github.workflow }}</a>
 
