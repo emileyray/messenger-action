@@ -141,9 +141,9 @@ runs:
 
         def main():
             config = get_vars()
-            if config.enable_telegram:
+            if config.enable_telegram == 'true':
                 send_telegram_message(config)
-            if config.enable_rocket_chat:
+            if config.enable_rocket_chat == 'true':
                 send_rocket_chat_message(config)
 
         if __name__ == '__main__':
