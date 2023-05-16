@@ -3,21 +3,27 @@ description: Send an alert to Telegram or Rocket Chat
 inputs:
   telegram_token:
     description: Telegram Bot Token (from @BotFather)
+    default: ''
     required: false
   telegram_to:
     description: ID of the target chat (get using @getidsbot) 
+    default: ''
     required: false
   rocket_chat_url:
     description: Rocket Chat URL
+    default: ''
     required: false
   rocket_chat_token:
     description: Rocket Chat Token
+    default: ''
     required: false
   rocket_chat_userID:
     description: Rocket Chat User ID
+    default: ''
     required: false
   rocket_chat_target_chat:
     description: Rocket Chat Target Chat
+    default: ''
     required: false
   telegram:
     description: Send message to Telegram
@@ -48,6 +54,16 @@ runs:
     #   shell: bash
     - name: run-script
       id: script
+      env:
+        INPUT_TELEGRAM_TOKEN: ${{ inputs.telegram_token }}
+        INPUT_TELEGRAM_TO: ${{ inputs.telegram_to }}
+        INPUT_ROCKET_CHAT_URL: ${{ inputs.rocket_chat_url }}
+        INPUT_ROCKET_CHAT_TOKEN: ${{ inputs.rocket_chat_token }}
+        INPUT_ROCKET_CHAT_USERID: ${{ inputs.rocket_chat_userID }}
+        INPUT_ROCKET_CHAT_TARGET_CHAT: ${{ inputs.rocket_chat_target_chat }}
+        INPUT_MESSAGE_TEXT: ${{ inputs.message_text }}
+        INPUT_ROCKET_CHAT: ${{ inputs.enable_rocket_chat }}
+        INPUT_TELEGRAM: ${{ inputs.enable_telegram }}
       run: |
         python3 - << BEBRA
         import os
