@@ -59,7 +59,7 @@ def send_rocket_chat_message(config: Config):
         'X-User-Id': config.rocket_chat_user_id,
         'Content-type': 'application/json'
     }
-    text = config.message_text.replace('\\n', '\n')
+    text = config.message_text.replace("\\n", "\n")
     data = {
         'channel': config.rocket_chat_channel,
         'text': text,
