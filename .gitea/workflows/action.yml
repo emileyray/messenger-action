@@ -26,9 +26,9 @@ jobs:
           rocket_chat_userID: ${{ secrets.ROCKET_CHAT_USERID }}
           rocket_chat_target_chat: ${{ secrets.ROCKET_CHAT_TARGET_CHAT }}
           telegram: 'true'
-          rocket_chat: 'true'
+          rocket_chat: 'false'
           message_text: |
             Build: *Messenger Action*
             - Build Number: ${{ github.run_number }}
             - Run name: ${{ github.workflow }}
-            - Changelog: ${{ steps.changelog.outputs.changelog }}
+            - Changelog: ${{ steps.changelog.outputs.output }}
