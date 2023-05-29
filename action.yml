@@ -108,9 +108,10 @@ runs:
             print(config)
             assert config.enable_telegram == 'true' and config.telegram_token and config.telegram_chat_id and config.message_text
             url = f'https://api.telegram.org/bot{config.telegram_token}/sendMessage'
+            text = config.message_text.replace("\\n", "\n")
             data = {
                 'chat_id': config.telegram_chat_id,
-                'text': config.message_text,
+                'text': text,
                 'parse_mode': 'markdown'
             }
             response = httpx.post(url, json=data)
