@@ -12,6 +12,11 @@ jobs:
     if: always()
     steps:
       - uses: actions/checkout@v3
+      - name: Generate changelog
+        id: changelog
+        uses: https://github.com/glebosotov/changelog-action@main
+        with:
+          gitea-token: ${{ secrets.GITEA_TOKEN }}
       - uses: ./
         with:
           telegram-token: ${{ secrets.TELEGRAM_TOKEN }}
@@ -26,4 +31,4 @@ jobs:
             Build: *Messenger Action*
             - Build Number: ${{ github.run_number }}
             - Run name: ${{ github.workflow }}
-            - Changelog: ${{ steps.changelog.outputs.output }}
+            - Changelog: ${{ steps.changelog.outputs.changelog }}
