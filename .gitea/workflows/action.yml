@@ -16,18 +16,18 @@ jobs:
         id: changelog
         uses: https://github.com/glebosotov/changelog-action@main
         with:
-          gitea-token: ${{ secrets.GITEA_TOKEN }}
+          gitea_token: ${{ secrets.GITEA_TOKEN }}
       - uses: ./
         with:
-          telegram-token: ${{ secrets.TELEGRAM_TOKEN }}
-          telegram-chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
-          rocket-chat-url: ${{ secrets.ROCKET_CHAT_URL }}
-          rocket-chat-token: ${{ secrets.ROCKET_CHAT_TOKEN }}
-          rocket-chat-userID: ${{ secrets.ROCKET_CHAT_USERID }}
-          rocket-chat-target-chat: ${{ secrets.ROCKET_CHAT_TARGET_CHAT }}
+          telegram_token: ${{ secrets.TELEGRAM_TOKEN }}
+          telegram_to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          rocket_chat_url: ${{ secrets.ROCKET_CHAT_URL }}
+          rocket_chat_token: ${{ secrets.ROCKET_CHAT_TOKEN }}
+          rocket_chat_userID: ${{ secrets.ROCKET_CHAT_USERID }}
+          rocket_chat_target_chat: ${{ secrets.ROCKET_CHAT_TARGET_CHAT }}
           telegram: 'true'
-          rocket-chat: 'true'
-          message-text: |
+          rocket_chat: 'true'
+          message_text: |
             Build: *Messenger Action*
             - Build Number: ${{ github.run_number }}
             - Run name: ${{ github.workflow }}
