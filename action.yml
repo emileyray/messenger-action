@@ -1,33 +1,39 @@
 name: send-message 
 description: Send an alert to Telegram or Rocket Chat 
 inputs:
-  telegram-token:
+  telegram_token:
     description: Telegram Bot Token (from @BotFather)
+    default: ''
     required: false
-  telegram-chat-id:
+  telegram_to:
     description: ID of the target chat (get using @getidsbot) 
+    default: ''
     required: false
-  rocket-chat-url:
+  rocket_chat_url:
     description: Rocket Chat URL
+    default: ''
     required: false
-  rocket-chat-token:
+  rocket_chat_token:
     description: Rocket Chat Token
+    default: ''
     required: false
-  rocket-chat-userID:
+  rocket_chat_userID:
     description: Rocket Chat User ID
+    default: ''
     required: false
-  rocket-chat-target-chat:
+  rocket_chat_target_chat:
     description: Rocket Chat Target Chat
+    default: ''
     required: false
   telegram:
     description: Send message to Telegram
     default: 'false'
     required: false
-  rocket-chat:
+  rocket_chat:
     description: Send message to Rocket Chat
     default: 'false'
     required: false
-  message-text:
+  message_text:
     description: Message text
     required: true
 # outputs:
@@ -48,6 +54,16 @@ runs:
     #   shell: bash
     - name: run-script
       id: script
+      env:
+        INPUT_TELEGRAM_TOKEN: ${{ inputs.telegram_token }}
+        INPUT_TELEGRAM_TO: ${{ inputs.telegram_to }}
+        INPUT_ROCKET_CHAT_URL: ${{ inputs.rocket_chat_url }}
+        INPUT_ROCKET_CHAT_TOKEN: ${{ inputs.rocket_chat_token }}
+        INPUT_ROCKET_CHAT_USERID: ${{ inputs.rocket_chat_userID }}
+        INPUT_ROCKET_CHAT_TARGET_CHAT: ${{ inputs.rocket_chat_target_chat }}
+        INPUT_MESSAGE_TEXT: ${{ inputs.message_text }}
+        INPUT_ROCKET_CHAT: ${{ inputs.rocket_chat }}
+        INPUT_TELEGRAM: ${{ inputs.telegram }}
       run: |
         python3 - << BEBRA
         import os
@@ -77,14 +93,14 @@ runs:
             # dotenv.load_dotenv()
             # print(os.environ)
             return Config(
-                telegram_token = os.environ['INPUT_TELEGRAM-TOKEN'],
-                telegram_chat_id = os.environ['INPUT_TELEGRAM-CHAT-ID'],
-                rocket_chat_url = os.environ['INPUT_ROCKET-CHAT-URL'],
-                rocket_chat_token = os.environ['INPUT_ROCKET-CHAT-TOKEN'],
-                rocket_chat_user_id = os.environ['INPUT_ROCKET-CHAT-USERID'],
-                rocket_chat_channel = os.environ['INPUT_ROCKET-CHAT-TARGET-CHAT'],
-                message_text = os.environ['INPUT_MESSAGE-TEXT'],
-                enable_rocket_chat = os.environ['INPUT_ROCKET-CHAT'],
+                telegram_token = os.environ['INPUT_TELEGRAM_TOKEN'],
+                telegram_chat_id = os.environ['INPUT_TELEGRAM_TO'],
+                rocket_chat_url = os.environ['INPUT_ROCKET_CHAT_URL'],
+                rocket_chat_token = os.environ['INPUT_ROCKET_CHAT_TOKEN'],
+                rocket_chat_user_id = os.environ['INPUT_ROCKET_CHAT_USERID'],
+                rocket_chat_channel = os.environ['INPUT_ROCKET_CHAT_TARGET_CHAT'],
+                message_text = os.environ['INPUT_MESSAGE_TEXT'],
+                enable_rocket_chat = os.environ['INPUT_ROCKET_CHAT'],
                 enable_telegram = os.environ['INPUT_TELEGRAM'],
             )
 
@@ -92,10 +108,11 @@ runs:
             print(config)
             assert config.enable_telegram == 'true' and config.telegram_token and config.telegram_chat_id and config.message_text
             url = f'https://api.telegram.org/bot{config.telegram_token}/sendMessage'
+            text = config.message_text.replace("\\n", "\n")
             data = {
                 'chat_id': config.telegram_chat_id,
-                'text': config.message_text,
-                'parse_mode': 'HTML'
+                'text': text,
+                'parse_mode': 'markdown'
             }
             response = httpx.post(url, json=data)
             if response.status_code != 200:
@@ -111,9 +128,10 @@ runs:
                 'X-User-Id': config.rocket_chat_user_id,
                 'Content-type': 'application/json'
             }
+            text = config.message_text.replace("\\n", "\n")
             data = {
                 'channel': config.rocket_chat_channel,
-                'text': config.message_text,
+                'text': text,
                 'alias': 'Beep Boop',
                 'avatar': 'https://img.freepik.com/premium-vector/cute-robot-waving-hand-cartoon-illustration_138676-2744.jpg?w=2000'
             }
@@ -125,9 +143,9 @@ runs:
 
         def main():
             config = get_vars()
-            if config.enable_telegram:
+            if config.enable_telegram == 'true':
                 send_telegram_message(config)
-            if config.enable_rocket_chat:
+            if config.enable_rocket_chat == 'true':
                 send_rocket_chat_message(config)
 
         if __name__ == '__main__':

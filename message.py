@@ -59,9 +59,10 @@ def send_rocket_chat_message(config: Config):
         'X-User-Id': config.rocket_chat_user_id,
         'Content-type': 'application/json'
     }
+    text = config.message_text.replace("\\n", "\n")
     data = {
         'channel': config.rocket_chat_channel,
-        'text': config.message_text,
+        'text': text,
         'alias': 'Beep Boop',
         'avatar': 'https://img.freepik.com/premium-vector/cute-robot-waving-hand-cartoon-illustration_138676-2744.jpg?w=2000'
     }
