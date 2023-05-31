@@ -71,6 +71,9 @@ def send_rocket_chat_message(config: Config):
     if response.status_code != 200:
         print(f'Error while posting message to Rocket.Chat \n{response.content}')
         print(response.text)
+        print(f'URL: {url}')
+        print(f'Headers: {headers}')
+        print(f'Data: {data}')
         sys.exit(1)
 
 def main():
