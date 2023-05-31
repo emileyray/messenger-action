@@ -74,6 +74,7 @@ def send_rocket_chat_message(config: Config):
         print(f'URL: {url}')
         print(f'Headers: {headers}')
         print(f'Data: {data}')
+        print(f'Response headers: {response.headers}')
         sys.exit(1)
 
 def main():
