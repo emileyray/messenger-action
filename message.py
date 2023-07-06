@@ -6,7 +6,7 @@ import httpx
 
 
 class Config:
-    def __init__(self, telegram_token, telegram_chat_id, rocket_chat_url, rocket_chat_token, rocket_chat_user_id, rocket_chat_channel, message_text, enable_telegram = 'false', enable_rocket_chat = 'false'):
+    def __init__(self, telegram_token, telegram_chat_id, rocket_chat_url, rocket_chat_token, rocket_chat_user_id, rocket_chat_channel, message_text, pull_request_number, repository_name, host, enable_telegram = 'false', enable_rocket_chat = 'false'):
         self.telegram_token = telegram_token
         self.telegram_chat_id = telegram_chat_id
         self.rocket_chat_url = rocket_chat_url
@@ -14,12 +14,15 @@ class Config:
         self.rocket_chat_user_id = rocket_chat_user_id
         self.rocket_chat_channel = rocket_chat_channel
         self.message_text = message_text
+        self.pull_request_number = pull_request_number
+        self.repository_name = repository_name
+        self.host = host
         self.enable_telegram = enable_telegram
         self.enable_rocket_chat = enable_rocket_chat
 
     # print
     def __str__(self):
-        return f'Config(telegram_token={self.telegram_token}, telegram_chat_id={self.telegram_chat_id}, rocket_chat_url={self.rocket_chat_url}, rocket_chat_token={self.rocket_chat_token}, rocket_chat_user_id={self.rocket_chat_user_id}, rocket_chat_channel={self.rocket_chat_channel}, message_text={self.message_text}, enable_telegram={self.enable_telegram}, enable_rocket_chat={self.enable_rocket_chat})'
+        return f'Config(telegram_token={self.telegram_token}, telegram_chat_id={self.telegram_chat_id}, rocket_chat_url={self.rocket_chat_url}, rocket_chat_token={self.rocket_chat_token}, rocket_chat_user_id={self.rocket_chat_user_id}, rocket_chat_channel={self.rocket_chat_channel}, message_text={self.message_text}, enable_telegram={self.enable_telegram}, enable_rocket_chat={self.enable_rocket_chat}, host={self.host}, repository_name = {self.repository_name}, pull_request_number = {self.pull_request_number})'
 
 def get_vars() -> Config:
     # dotenv.load_dotenv()
@@ -34,6 +37,9 @@ def get_vars() -> Config:
         message_text = os.environ['INPUT_MESSAGE_TEXT'],
         enable_rocket_chat = os.environ['INPUT_ROCKET_CHAT'],
         enable_telegram = os.environ['INPUT_TELEGRAM'],
+        pull_request_number = os.environ['INPUT_PULL_REQUEST_NUMBER'],
+        repository_name = os.environ['INPUT_REPOSITORY_NAME'],
+        host = os.environ['INPUT_HOST']
     )
 
 def send_telegram_message(config: Config):
@@ -52,6 +58,12 @@ def send_telegram_message(config: Config):
         print(response.text)
         sys.exit(1)
 
+def get_pull_request_link(config: Config):
+    if config.host and config.repository_name and config.pull_request_number:
+        return f'https://{config.host}/{config.repository_name}/pulls/{config.pull_request_number}'
+    
+    return None
+
 def send_rocket_chat_message(config: Config):
     assert config.enable_rocket_chat == 'true' and config.rocket_chat_url and config.rocket_chat_token and config.rocket_chat_user_id and config.rocket_chat_channel and config.message_text
     url = f'{config.rocket_chat_url}/api/v1/chat.postMessage'
@@ -60,7 +72,12 @@ def send_rocket_chat_message(config: Config):
         'X-User-Id': config.rocket_chat_user_id,
         'Content-type': 'application/json'
     }
+
     text = config.message_text.replace("\\n", "\n")
+    pull_request_link = get_pull_request_link(config)
+    if (pull_request_link):
+        text = f'*[Pull Request #{config.pull_request_number}]({pull_request_link})*\n{text}'
+
     data = {
         'channel': config.rocket_chat_channel,
         'text': text,

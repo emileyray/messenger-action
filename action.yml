@@ -33,6 +33,15 @@ inputs:
     description: Send message to Rocket Chat
     default: 'false'
     required: false
+  pull_request_number:
+    description: PR number to generate a PR link
+    required: false
+  repository_name:
+    description: Repository name to generate a PR link
+    required: false
+  host:
+    descipriotn: Host to generate a PR link
+    required: false
   message_text:
     description: Message text
     required: true
@@ -59,6 +68,9 @@ runs:
         INPUT_MESSAGE_TEXT: ${{ inputs.message_text }}
         INPUT_ROCKET_CHAT: ${{ inputs.rocket_chat }}
         INPUT_TELEGRAM: ${{ inputs.telegram }}
+        INPUT_PULL_REQUEST_NUMBER: ${{ inputs.pull_request_number }}
+        INPUT_REPOSITORY_NAME: ${{ inputs.repository_name }}
+        INPUT_HOST: ${{ inputs.host }}
       run: |
         python3 ${{ github.action_path }}/message.py
       shell: bash
